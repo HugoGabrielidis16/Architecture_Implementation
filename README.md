@@ -13,5 +13,5 @@ To-Do :
 	- Transformer
 	- AlexNet
 	
-	--> This article : https://www.upgrad.com/blog/neural-network-architectures/
+--> This article : https://www.upgrad.com/blog/neural-network-architectures/
 
