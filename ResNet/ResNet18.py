@@ -6,7 +6,7 @@ class IdentityBlock(tf.keras.Model):
     def __init__(self, filters, kernel_size):
         super(IdentityBlock, self).__init__(name = '')
 
-        self.conv1 = tf.keras.layers.Convd2D( filters, kernel_size, padding = 'same' )
+        self.conv1 = tf.keras.layers.Conv2D( filters, kernel_size, padding = 'same' )
         self.bn1 = tf.keras.layers.BatchNormalization()
 
         self.conv2 = tf.keras.layers.Conv2D( filters, kernel_size, padding = 'same')
@@ -25,7 +25,9 @@ class IdentityBlock(tf.keras.Model):
         x = self.act(x)
 
         x = self.add([x, input_tensor])
-        x= self.act(x)
+        x = self.act(x)
+        
+        return x
 
 
 class ResNet18(tf.keras.Model):
@@ -62,3 +64,34 @@ resnet18.compile(
     metrics = ["accuracy"]
 )
 
+
+
+(train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.cifar10.load_data()
+
+def process_images(image,label):
+    # Normalize images to have a mean of 0 and standard deviation of 1
+    image = tf.image.per_image_standardization(image)
+    # Resize images from 32x32 to 277x277
+    image = tf.image.resize(image, (227,227))
+    return image,label
+    
+train_ds = tf.data.Dataset.from_tensor_slices((train_images, train_labels))
+test_ds = tf.data.Dataset.from_tensor_slices((test_images, test_labels))
+
+train_ds_size = tf.data.experimental.cardinality(train_ds).numpy()
+test_ds_size = tf.data.experimental.cardinality(test_ds).numpy()
+
+train_ds = (train_ds
+                  .map(process_images)
+                  .shuffle(buffer_size=train_ds_size)
+                  .batch(batch_size=32, drop_remainder=True))
+test_ds = (test_ds
+                  .map(process_images)
+                  .shuffle(buffer_size=train_ds_size)
+                  .batch(batch_size=32, drop_remainder=True))
+
+
+resnet18.fit(train_ds,
+            epochs = 2,
+            validation_data = test_ds,
+            validation_batch_size = 32)
