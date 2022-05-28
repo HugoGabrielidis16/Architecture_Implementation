@@ -19,7 +19,7 @@ def process_image(image):
 
 image = cv2.imread(PATH_TO_IMAGE) 
 image = process_image(image)
-
+image = tf.expand_dims(image, axis = 0) # has to be in batch form
 
 predicted = AlexNet.predict(image)
 label = CLASS_NAMES[np.argmax(predicted)]
