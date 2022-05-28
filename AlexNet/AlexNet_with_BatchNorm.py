@@ -1,6 +1,7 @@
 import tensorflow as tf
 
 
+
 (train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.cifar10.load_data()
 
 def process_images(image,label):
@@ -31,28 +32,36 @@ model = tf.keras.Sequential([
     tf.keras.layers.Input(shape = (227,227,3)),
     tf.keras.layers.Conv2D( filters = 96,
                             kernel_size = (11,11),
-                            strides = 4,
-                            activation = 'relu'),
+                            strides = 4),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Activation('relu'),
     tf.keras.layers.MaxPool2D(pool_size = (3,3),
                               strides = 2),
     tf.keras.layers.Conv2D( filters = 256,
                             kernel_size = (5,5), 
-                            padding = 'same',
-                            activation = 'relu'),
+                            padding = 'same'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Activation('relu'),
     tf.keras.layers.MaxPool2D(pool_size = (3,3),
                               strides = 2),
     tf.keras.layers.Conv2D( filters = 384,
                             kernel_size = (3,3),
                             strides = 1,
                             padding = 'same'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Activation('relu'),
     tf.keras.layers.Conv2D( filters = 384,
                             kernel_size = (3,3),
                             strides = 1,
                             padding = 'same'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Activation('relu'),
     tf.keras.layers.Conv2D( filters = 256,
                             kernel_size = (3,3),
                             strides = 1,
                             padding = 'same'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Activation('relu'),
     tf.keras.layers.MaxPool2D(pool_size = (3,3),
                               strides = 2),
 
@@ -70,6 +79,9 @@ model.compile(
     optimizer = tf.keras.optimizers.Adam(),
     metrics = ['accuracy']
 )
+
+
+
 
 
 model.fit( train_ds,
