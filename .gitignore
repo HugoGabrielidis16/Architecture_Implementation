@@ -7,5 +7,8 @@
 ./AlexNet/data/cifar-10-batches-py/data_batch_4
 ./AlexNet/data/cifar-10-batches-py/data_batch_3
 ./AlexNet/data/cifar-10-python.tar.gz
+<<<<<<< HEAD
 AlexNet/pytorch/Alexnet.pt
 AlexNet/data/
+=======
+>>>>>>> 4a3dcaf3a7a79c2ed0b68c90adf8a0620923c4e4
