@@ -1,1 +1,9 @@
 *.pdf
+./AlexNet/pytorch/Alexnet.pt
+./AlexNet/data/cifar-10-batches-py/data_batch_1
+./AlexNet/data/cifar-10-batches-py/data_batch_2
+./AlexNet/data/cifar-10-batches-py/data_batch_5
+./AlexNet/data/cifar-10-batches-py/test_batch
+./AlexNet/data/cifar-10-batches-py/data_batch_4
+./AlexNet/data/cifar-10-batches-py/data_batch_3
+./AlexNet/data/cifar-10-python.tar.gz
