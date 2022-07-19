@@ -1,69 +1,62 @@
-   
-import numpy as np 
-import os
-import skimage.io as io
-import skimage.transform as trans
-import numpy as np
-from keras.models import *
-from keras import layers
-from keras.optimizers import *
-from keras.callbacks import ModelCheckpoint, LearningRateScheduler
-from keras import backend as keras
+from tensorflow.keras.layers import (
+    Conv2D,
+    BatchNormalization,
+    Activation,
+    MaxPool2D,
+    Conv2DTranspose,
+    Concatenate,
+    Input,
+)
+from tensorflow.keras.models import Model
 
 
-def get_model(img_size, num_classes):
-    inputs = keras.Input(shape=img_size + (3,))
+def conv_block(input, num_filters):
+    x = Conv2D(num_filters, 3, padding="same")(input)
+    x = BatchNormalization()(x)
+    x = Activation("relu")(x)
 
-    ### [First half of the network: downsampling inputs] ###
+    x = Conv2D(num_filters, 3, padding="same")(x)
+    x = BatchNormalization()(x)
+    x = Activation("relu")(x)
 
-    # Entry block
-    x = layers.Conv2D(32, 3, strides=2, padding="same")(inputs)
-    x = layers.BatchNormalization()(x)
-    x = layers.Activation("relu")(x)
+    return x
 
-    previous_block_activation = x  # Set aside residual
 
-    # Blocks 1, 2, 3 are identical apart from the feature depth.
-    for filters in [64, 128, 256]:
-        x = layers.Activation("relu")(x)
-        x = layers.SeparableConv2D(filters, 3, padding="same")(x)
-        x = layers.BatchNormalization()(x)
+def encoder_block(input, num_filters):
+    x = conv_block(input, num_filters)
+    p = MaxPool2D((2, 2))(x)
+    return x, p
 
-        x = layers.Activation("relu")(x)
-        x = layers.SeparableConv2D(filters, 3, padding="same")(x)
-        x = layers.BatchNormalization()(x)
 
-        x = layers.MaxPooling2D(3, strides=2, padding="same")(x)
+def decoder_block(input, skip_features, num_filters):
+    x = Conv2DTranspose(num_filters, (2, 2), strides=2, padding="same")(input)
+    x = Concatenate()([x, skip_features])
+    x = conv_block(x, num_filters)
+    return x
 
-        # Project residual
-        residual = layers.Conv2D(filters, 1, strides=2, padding="same")(
-            previous_block_activation
-        )
-        x = layers.add([x, residual])  # Add back residual
-        previous_block_activation = x  # Set aside next residual
 
-    ### [Second half of the network: upsampling inputs] ###
+def build_unet(input_shape):
+    inputs = Input(input_shape)
 
-    for filters in [256, 128, 64, 32]:
-        x = layers.Activation("relu")(x)
-        x = layers.Conv2DTranspose(filters, 3, padding="same")(x)
-        x = layers.BatchNormalization()(x)
+    s1, p1 = encoder_block(inputs, 64)
+    s2, p2 = encoder_block(p1, 128)
+    s3, p3 = encoder_block(p2, 256)
+    s4, p4 = encoder_block(p3, 512)
 
-        x = layers.Activation("relu")(x)
-        x = layers.Conv2DTranspose(filters, 3, padding="same")(x)
-        x = layers.BatchNormalization()(x)
+    b1 = conv_block(p4, 1024)
 
-        x = layers.UpSampling2D(2)(x)
+    d1 = decoder_block(b1, s4, 512)
+    d2 = decoder_block(d1, s3, 256)
+    d3 = decoder_block(d2, s2, 128)
+    d4 = decoder_block(d3, s1, 64)
 
-        # Project residual
-        residual = layers.UpSampling2D(2)(previous_block_activation)
-        residual = layers.Conv2D(filters, 1, padding="same")(residual)
-        x = layers.add([x, residual])  # Add back residual
-        previous_block_activation = x  # Set aside next residual
+    outputs = Conv2D(1, 1, padding="same", activation="sigmoid")(d4)
 
-    # Add a per-pixel classification layer
-    outputs = layers.Conv2D(num_classes, 3, activation="softmax", padding="same")(x)
-
-    # Define the model
-    model = keras.Model(inputs, outputs)
+    model = Model(inputs, outputs, name="U-Net")
     return model
+
+
+if __name__ == "__main__":
+    input_shape = (512, 512, 3)
+    model = build_unet(input_shape)
+    model.summary()

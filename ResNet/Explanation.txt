@@ -1,0 +1,7 @@
+ResNet architecture use the concept of Residual block where after some convolution layers the orignal inputs is added.
+This was proved to solve the problem of vanishing gradient during back propagation.
+The vanishing gradient issue was faced when training really deep neural network. 
+
+
+
+"The skip connections in ResNet solve the problem of vanishing gradient in deep neural networks by allowing this alternate shortcut path for the gradient to flow through. The other way that these connections help is by allowing the model to learn the identity functions which ensures that the higher layer will perform at least as good as the lower layer, and not worse."

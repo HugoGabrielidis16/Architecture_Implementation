@@ -1,0 +1,1 @@
+In order to test Transformers and become more familiar with them I will test it on a sentiment analysis task.
