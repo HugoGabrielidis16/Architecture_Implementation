@@ -9,14 +9,14 @@ if __name__ == "__main__":
 
     model.fit(
         train_ds,
-        epochs=1,
+        epochs=10,
         validation_data=val_ds,
         batch_size=32,
     )
-
+    model.save("autoencoder.h5")
     # The encoder corresponds to the first 4 layers
     encoder = tf.keras.Sequential([])
-    for layer in range(5):
+    for layer in range(7):
         encoder.add(model.layers[layer])
     encoder.summary()
 
