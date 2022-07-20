@@ -1,17 +1,16 @@
 # Architecture_Implementation
 
+## Goal
+
 Trying to implement some famous Neural Network architecture on some dataset
 
-Done :
+# Implemented
 
-	- VGG16 on a male/female Dataset -> Import it on this folder
+:white_check_mark: AlexNet
+:white_check_mark: EfficientNet
+:white_check_mark: GANs
 
-To-Do :
-	- U-NET
-	- ResNet
-	- LSTM
-	- Transformer
-	- AlexNet
-	
+    - VGG16 on a male/female Dataset -> Import it on this folder
+
+To-Do : - U-NET - ResNet - LSTM - Transformer - AlexNet
 --> This article : https://www.upgrad.com/blog/neural-network-architectures/
-
