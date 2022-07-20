@@ -2,15 +2,18 @@
 
 ## Goal
 
-Trying to implement some famous Neural Network architecture on some dataset
+Implement DL & ML models from their paper . Understanding the reason why they were made (the advantage they had on their peers),
+implement them on various datasets ( same for each fields ) to compare it with what was previously done.
 
 # Implemented
 
-:white_check_mark: AlexNet
-:white_check_mark: EfficientNet
-:white_check_mark: GANs
+:white_check_mark: AlexNet </br>
+:white_check_mark: ResNet </br>
+:white_check_mark: EfficientNet </br>
+:white_check_mark: UNET </br>
 
-    - VGG16 on a male/female Dataset -> Import it on this folder
+# To DO
 
-To-Do : - U-NET - ResNet - LSTM - Transformer - AlexNet
---> This article : https://www.upgrad.com/blog/neural-network-architectures/
+:memo: RNN </br>
+:memo: LSTM </br>
+:memo: Transformer </br>
