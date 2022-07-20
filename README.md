@@ -17,3 +17,7 @@ implement them on various datasets ( same for each fields ) to compare it with w
 :memo: RNN </br>
 :memo: LSTM </br>
 :memo: Transformer </br>
+
+# Other
+
+I tried to alternate between Tensorflow and Pytorch between the projects in order to become familiar with both
