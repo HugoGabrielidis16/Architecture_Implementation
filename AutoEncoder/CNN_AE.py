@@ -1,19 +1,23 @@
 import tensorflow as tf
 
 
+def rounded_accuracy(y_true, y_pred):
+    return tf.keras.metrics.binary_accuracy(tf.round(y_true), tf.round(y_pred))
+
+
 def encoder(inputs):
-    x = tf.keras.layers.Conv2D(32, (2, 2), activation="relu", padding="same")(inputs)
+    x = tf.keras.layers.Conv2D(32, (2, 2), activation="selu", padding="same")(inputs)
     x = tf.keras.layers.MaxPooling2D(pool_size=(2, 2), padding="same")(x)
-    x = tf.keras.layers.Conv2D(64, (2, 2), activation="relu", padding="same")(x)
+    x = tf.keras.layers.Conv2D(64, (2, 2), activation="selu", padding="same")(x)
     x = tf.keras.layers.MaxPooling2D(pool_size=(2, 2), padding="same")(x)
     return x
 
 
 def decoder(x):
     x = tf.keras.layers.UpSampling2D((2, 2))(x)
-    x = tf.keras.layers.Conv2D(64, (2, 2), activation="relu", padding="same")(x)
+    x = tf.keras.layers.Conv2D(64, (2, 2), activation="selu", padding="same")(x)
     x = tf.keras.layers.UpSampling2D((2, 2))(x)
-    x = tf.keras.layers.Conv2D(32, (2, 2), activation="relu", padding="same")(x)
+    x = tf.keras.layers.Conv2D(32, (2, 2), activation="selu", padding="same")(x)
     outputs = tf.keras.layers.Conv2D(1, (3, 3), activation="sigmoid", padding="same")(x)
     return outputs
 
@@ -24,7 +28,11 @@ def create_model():
     outputs = decoder(x)
     model = tf.keras.Model(inputs=inputs, outputs=outputs)
 
-    model.compile(optimizer="adadelta", loss="binary_crossentropy", metrics=["acc"])
+    model.compile(
+        optimizer=tf.keras.optimizers.SGD(learning_rate=1.5),
+        loss="binary_crossentropy",
+        metrics=[rounded_accuracy],
+    )
 
     return model
 

@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from random import randint
+import tensorflow as tf
 
 
 def show_image(img, target):
@@ -16,3 +17,7 @@ def show_image(img, target):
         plt.title("Target Image")
         plt.axis("off")
     plt.show()
+
+
+def rounded_accuracy(y_true, y_pred):
+    return tf.keras.metrics.binary_accuracy(tf.round(y_true), tf.round(y_pred))
