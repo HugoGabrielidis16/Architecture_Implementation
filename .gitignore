@@ -2,8 +2,9 @@
 *.csv
 *.png
 *.jpeg
+*.jpg
 
-
+__pycache__/
 
 ./AlexNet/pytorch/Alexnet.pt
 ./AlexNet/data/cifar-10-batches-py/data_batch_1

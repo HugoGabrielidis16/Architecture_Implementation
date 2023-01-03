@@ -1,0 +1,150 @@
+training:
+  epoch: 20
+  learning_rate: 3e-4
+  train_batch_size: 32
+  test_batch_size: 64
+  wandb: true
+
+model:
+  schema:
+    input: (256,256,3)
+    output: (256,256,13)
+
+  architecture:
+    down_conv:
+      conv_1:
+        out_channels: 32
+        padding: "same"
+        dilation: 1
+        stride: 1
+        kernel_size: 1
+
+      conv_2:
+        in_channels: 32
+        out_channels: 64
+        dilation: 1
+        stride: 2
+        kernel_size: 1
+
+      conv_3:
+        in_channels: 64
+        out_channels: 128
+        dilation: 1
+        stride: 2
+        kernel_size: 1
+
+      conv_4:
+        in_channels: 128
+        out_channels: 256
+        dilation: 1
+        stride: 2
+        kernel_size: 1
+
+      conv_5:
+        in_channels: 256
+        out_channels: 512
+        dilation: 1
+        stride: 2
+        kernel_size: 1
+
+      conv_6:
+        in_channels: 512
+        out_channels: 1024
+        dilation: 1
+        stride: 2
+        kernel_size: 1
+
+    down_block:
+      resblock_1:
+        input_channels: 32
+        output_channels: 32
+        d: [1, 3, 15, 31]
+
+      resblock_2:
+        input_channels: 64
+        output_channels: 64
+        d: [1, 3, 15, 31]
+
+      resblock_3:
+        input_channels: 128
+        output_channels: 128
+        d: [1, 3, 15]
+
+      resblock_4:
+        input_channels: 256
+        output_channels: 256
+        d: [1, 3, 15]
+
+      resblock_5:
+        input_channels: 512
+        output_channels: 512
+        d: [1]
+
+      resblock_6:
+        input_channels: 1024
+        output_channels: 1024
+        d: [1]
+
+    bottleneck:
+      PSPpooling:
+        input_channels: 1024
+        factor: [1, 2, 4, 8]
+
+    up_block:
+      resblock_1:
+        input_channels: 512
+        output_channels: 512
+        d: [1]
+
+      resblock_2:
+        input_channels: 256
+        output_channels: 256
+        d: [1, 3, 15]
+
+      resblock_3:
+        input_channels: 128
+        output_channels: 128
+        d: [1, 3, 15]
+
+      resblock_4:
+        input_channels: 64
+        output_channels: 64
+        d: [1, 3, 15, 31]
+
+      resblock_5:
+        input_channels: 32
+        output_channels: 32
+        d: [1, 3, 15]
+
+      PSPpooling:
+        input_channels: 32
+        factor: [1, 2, 4, 8]
+
+    combine:
+      combine_1:
+        in_channels: 512
+        out_channels: 512
+      combine_2:
+        in_channels: 256
+        out_channels: 256
+
+      combine_3:
+        in_channels: 128
+        out_channels: 128
+      combine_4:
+        in_channels: 64
+        out_channels: 64
+
+      combine_5:
+        in_channels: 32
+        out_channels: 32
+
+      combine_6:
+        in_channels: 32
+        out_channels: 32
+
+    last_conv:
+      in_channels: 32
+      kernel_size: 1
+      stride: 1
+      padding: "same"

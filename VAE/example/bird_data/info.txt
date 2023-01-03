@@ -1,0 +1,30 @@
+.Recommendations on use of thr dataset:
+
+This is a very large dataset. It has 450 classes. There are 70,658 training images, 2250 test images  
+and 2259 validation images. All images are 224 X 224 X 3 jpg format. Because of the size of the dataset  
+it can take a very long time to train. For example if you use an image size of 200 X200 for training it takes  
+about 16 minutes per epoch. I trained a model using that image size and achieved an F1 score of 99.28%,  
+That is the trained model included as part of this dataset.  
+To reduce the training time per epoch you can use a smaller images size. 
+I used an image size of 120 X 120 to train a moodel and got an F1 score of about 97 % on the test set and the average
+duration of an epoch was about 7 minutes.
+For the training set the number of images in the classes varies from a maximum of 248 to a minimum of 130. For the   
+trained model in the dataset I trimmed the training set to have a maximum of 160 images in any class. I then used   
+augmentation to add images to the under represented classes so that in the end each class had 160 training images.
+You would probably get a high F1 score just using 130 images per class.
+One of the deficiencies in the dataset is the ratio of male images to female images. Google and Bing searches tend to  
+include far more images of the male of the species versus that of the female of the species. I estimate that about  
+80% of the images in the dataset are of the male of the species. I therefore expect the models ability to accurately  
+classify an image of a female bird may be significantly lower than the F1 scores the model achieved on the test set.
+
+A note for users trying to identify a bird species from photos:
+
+If you see a bird and want to identify its species, it is BEST to take several photos of the bird rather than just one.
+For each image you should use some photo processing software to crop the image so that to the extent possible the cropped
+image maximizes the ratio of pixels of the bird divided by the total number of pixels in the cropped image. 
+You can consider that ratio as equivalent to a signal to noise ratio for the image. In the dataset I cropped all images  
+to maximize this ratio. Note for an image, crop it first then resize it. Included in my notebook for this dataset is  
+a function ave_predictor. When this function is used with the parameter averaged=True it process all images in a directory  
+and returns as the class for ALL images as the class having the highest summed probability over all images predictions.
+You should use this function if you have several phots of the same bird as mentioned above. That way you get a much more  
+accurate  prediction for the birds species.

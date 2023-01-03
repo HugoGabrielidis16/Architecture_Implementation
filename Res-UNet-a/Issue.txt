@@ -1,0 +1,4 @@
+Cannot transform model to ONNX because of the use of "padding = 'same' " 
+    (refer to :https://stackoverflow.com/questions/68565147/pytorch-unable-to-export-trained-model-as-onnx answer 2)
+
+    
