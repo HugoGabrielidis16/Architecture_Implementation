@@ -1,4 +1,10 @@
 *.pdf
+*.csv
+*.png
+*.jpeg
+
+
+
 ./AlexNet/pytorch/Alexnet.pt
 ./AlexNet/data/cifar-10-batches-py/data_batch_1
 ./AlexNet/data/cifar-10-batches-py/data_batch_2
