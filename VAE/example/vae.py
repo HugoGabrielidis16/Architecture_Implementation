@@ -71,4 +71,4 @@ if __name__ == "__main__":
     x = torch.randn(6, 3, 224, 224)
     model = VAE((3, 224, 224))
     pred_img, pred_mean, pred_var = model(x)
-    summary(model, (3, 224, 224))
+    # summary(model, (3, 224, 224))

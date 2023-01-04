@@ -40,7 +40,7 @@ class BirdDataset(torch.utils.data.Dataset):
         image_path = self.file_path[idx]
         image = np.array(Image.open(image_path))
         transformed_image = self.transform(image=image)["image"]
-        return transformed_image / 255
+        return (transformed_image / 255).to(torch.float32)
 
 
 class BirdLoader:

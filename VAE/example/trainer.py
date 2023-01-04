@@ -42,7 +42,6 @@ class Trainer:
             x = data.to(self.device)
 
             pred_img, pred_mean, pred_var = self.model(x)
-            print(pred_img[0])
             kl_loss = self.kl_loss(pred_mean, pred_var)
             reconstruction_loss = self.reconstruction_loss(pred_img, x)
 
@@ -70,12 +69,10 @@ class Trainer:
                         kl_loss,
                     )
                 )
-            if batch_id % 50 == 0:
-                fig, (ax1, ax2) = plt.subplots(1, 2)
-                ax1.imshow(x[0].permute((1, 2, 0)).cpu().detach().numpy(), cmap="turbo")
-                ax2.imshow(
-                    pred_img[0].permute((1, 2, 0)).cpu().detach().numpy(), cmap="turbo"
-                )
+            if batch_id == len(self.train_loader) - 1:
+                random_vector = torch.randn(1, 100).to(self.device)
+                generated_image = self.model.decode(random_vector)
+                plt.imshow(generated_image[0].detach().cpu().permute(1, 2, 0))
                 plt.show()
 
     def test_one_step(self, epoch):
