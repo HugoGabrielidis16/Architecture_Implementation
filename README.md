@@ -5,13 +5,13 @@
 Implement DL & ML models from their paper . Understanding the reason why they were made (the advantage they had on their peers),
 implement them on various datasets ( same for each fields ) to compare it with what was previously done.
 
-My Learning process to understand a new model is :
-    1. Reading vulgarization on the model (no math involved at this step), only the general idea.
-    2. Look at some video on the model.
-    3. Go more in depth on step 1&2.
-    4. Read the original paper.
-    5. Implement it from scratch.
-    6. If possible find the same result as described in the paper.
+My Learning process to understand a new model is :</br>
+    1. Reading vulgarization on the model (no math involved at this step), only the general idea.</br>
+    2. Look at some video on the model.</br>
+    3. Go more in depth on step 1&2.</br>
+    4. Read the original paper.</br>
+    5. Implement it from scratch.</br>
+    6. If possible find the same result as described in the paper.</br>
 
 # Implemented
 
