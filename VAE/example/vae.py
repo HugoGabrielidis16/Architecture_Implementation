@@ -37,11 +37,11 @@ class VAE(nn.Module):
             nn.Flatten(),
         )
 
-        self.mean = nn.Linear(100352, 100)  # Result
-        self.var = nn.Linear(100352, 100)
+        self.mean = nn.Linear(100352, 5)  # Result
+        self.var = nn.Linear(100352, 5)
 
         self.decoder = nn.Sequential(
-            nn.Linear(100, 100352),
+            nn.Linear(5, 100352),
             Reshape(-1, 32, 56, 56),
             nn.ConvTranspose2d(32, 16, stride=(1, 1), kernel_size=(3, 3), padding=1),
             nn.LeakyReLU(0.01),
@@ -71,4 +71,4 @@ if __name__ == "__main__":
     x = torch.randn(6, 3, 224, 224)
     model = VAE((3, 224, 224))
     pred_img, pred_mean, pred_var = model(x)
-    # summary(model, (3, 224, 224))
+    summary(model, (3, 224, 224))

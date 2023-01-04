@@ -11,6 +11,7 @@ for the loss
 """
 import math
 import torch
+import torch.nn.functional as F
 
 
 def KL_loss(mean, var):
@@ -31,7 +32,10 @@ def KL_loss(mean, var):
     return loss
 
 
-def MSE_loss(y_pred, y_true, batch_size=32):
+def MSE_loss(
+    y_pred,
+    y_true,
+):
     """
     Take as input two batched tensor of images and return the mean of the MSE loss over the batch dimension
 
@@ -41,13 +45,14 @@ def MSE_loss(y_pred, y_true, batch_size=32):
     y_true (Tensor) : Ground truth image.
     batch_size (int) : Batch_size.
     """
-
+    batch_size = y_pred.shape[0]
     y_pred_flat = y_pred.view(batch_size, -1)
     y_true_flat = y_true.view(batch_size, -1)
 
     assert y_pred_flat.shape[1] == y_true_flat.shape[1]
     size = y_pred_flat.shape[1]
-    loss = (y_pred_flat - y_true_flat) ** 2
+    loss = (y_pred_flat - y_true_flat) ** 2  # MSE
+
     loss_for_each_batch = (
         loss.sum(axis=1) / size
     )  # Sum over each pixels and divide by the size
@@ -58,4 +63,7 @@ def MSE_loss(y_pred, y_true, batch_size=32):
 if __name__ == "__main__":
     mean = torch.randn(6, 100)
     var = torch.randn(6, 100)
-    print(KL_loss(mean, var))
+
+    image = torch.randn(6, 3, 32, 32)
+    pred = torch.randn(6, 3, 32, 32)
+    print(MSE_loss(pred, image))
