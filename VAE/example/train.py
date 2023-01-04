@@ -12,7 +12,7 @@ if __name__ == "__main__":
     print("Data loaders generated.")
     model = VAE((3, 224, 224))
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    criterion = torch.optim.Adam(params=model.parameters(), lr=0.001)
+    criterion = torch.optim.Adam(params=model.parameters(), lr=3e-4)
 
     print("Training model...")
     trainer = Trainer(

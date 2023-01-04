@@ -1,4 +1,5 @@
 import torch
+import matplotlib.pyplot as plt
 
 
 class Trainer:
@@ -10,8 +11,8 @@ class Trainer:
         reconstruction_loss,
         kl_loss,
         criterion,
-        device,
         total_epochs,
+        device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu"),
     ):
 
         self.model = model
@@ -35,16 +36,18 @@ class Trainer:
         }
 
     def train_one_step(self, epoch):
-        self.model.to(self.device)
+        # self.model.to(self.device)
         self.model.train()
         for batch_id, data in enumerate(self.train_loader):
-            x = data[0].to(self.device)
+            x = data.to(self.device)
+
             pred_img, pred_mean, pred_var = self.model(x)
+            print(pred_img[0])
             kl_loss = self.kl_loss(pred_mean, pred_var)
             reconstruction_loss = self.reconstruction_loss(pred_img, x)
 
             loss = kl_loss + reconstruction_loss
-            self.optimizer.zero_grad()
+            self.criterion.zero_grad()
             loss.backward()
 
             self.train_loss_dict["reconstruction_loss"].append(
@@ -54,22 +57,33 @@ class Trainer:
             self.test_loss_dict["combined_loss"].append(loss.item())
 
             if batch_id % 30 == 0:
+
                 print(
-                    "Epoch: %03d/%03d | Batch %04d/%04d | Loss: %.4f"
+                    "Epoch: %03d/%03d | Batch %04d/%04d | Loss: %.4f | Reconstruction Loss: %.4f | KL Loss: %.4f"
                     % (
                         epoch + 1,
                         self.total_epochs,
                         batch_id,
-                        len(self.train_loader),
+                        len(self.test_loader),
                         loss,
+                        reconstruction_loss,
+                        kl_loss,
                     )
                 )
+            if batch_id % 50 == 0:
+                fig, (ax1, ax2) = plt.subplots(1, 2)
+                ax1.imshow(x[0].permute((1, 2, 0)).cpu().detach().numpy(), cmap="turbo")
+                ax2.imshow(
+                    pred_img[0].permute((1, 2, 0)).cpu().detach().numpy(), cmap="turbo"
+                )
+                plt.show()
 
     def test_one_step(self, epoch):
         self.model.to(self.device)
         self.model.train()
         for batch_id, data in enumerate(self.test_loader):
             x = data.to(self.device)
+
             pred_img, pred_mean, pred_var = self.model(x)
             kl_loss = self.kl_loss(pred_mean, pred_var)
             reconstruction_loss = self.reconstruction_loss(pred_img, x)
@@ -83,18 +97,20 @@ class Trainer:
 
             if batch_id % 30 == 0:
                 print(
-                    "Epoch: %03d/%03d | Batch %04d/%04d | Loss: %.4f"
+                    "Epoch: %03d/%03d | Batch %04d/%04d | Loss: %.4f | Reconstruction Loss: %.4f | KL Loss: %.4f"
                     % (
                         epoch + 1,
                         self.total_epochs,
                         batch_id,
                         len(self.test_loader),
                         loss,
+                        reconstruction_loss,
+                        kl_loss,
                     )
                 )
 
     def fit(self):
         for epoch in range(self.total_epochs):
             print(f"Epoch : {epoch}/{self.total_epochs}")
-            self.test_one_step(epoch=epoch)
+            self.train_one_step(epoch=epoch)
             self.test_one_step(epoch=epoch)

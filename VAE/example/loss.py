@@ -26,8 +26,7 @@ def KL_loss(mean, var):
     ------
     loss (float) : result of the KL-loss.
     """
-    loss = -(1 / 2) * (torch.log(var) - var - mean**2 + 1)
-    loss = loss.sum(axis=1)
+    loss = -(1 / 2) * torch.sum(1 + var - mean**2 - torch.exp(var))
     loss = loss.mean()
     return loss
 
@@ -54,3 +53,9 @@ def MSE_loss(y_pred, y_true, batch_size=32):
     )  # Sum over each pixels and divide by the size
     mean_loss = loss_for_each_batch.mean()  # Average over batch dimension
     return mean_loss
+
+
+if __name__ == "__main__":
+    mean = torch.randn(6, 100)
+    var = torch.randn(6, 100)
+    print(KL_loss(mean, var))

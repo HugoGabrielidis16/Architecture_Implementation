@@ -27,29 +27,29 @@ class VAE(nn.Module):
 
         self.channel, self.width, self.height = shape
         self.encoder = nn.Sequential(
-            nn.Conv2d(self.channel, 32, stride=(1, 1), kernel_size=(3, 3), padding=1),
+            nn.Conv2d(self.channel, 8, stride=(1, 1), kernel_size=(3, 3), padding=1),
             nn.LeakyReLU(0.01),
-            nn.Conv2d(32, 64, stride=(2, 2), kernel_size=(3, 3), padding=1),
+            nn.Conv2d(8, 16, stride=(2, 2), kernel_size=(3, 3), padding=1),
             nn.LeakyReLU(0.01),
-            nn.Conv2d(64, 64, stride=(2, 2), kernel_size=(3, 3), padding=1),
+            nn.Conv2d(16, 16, stride=(2, 2), kernel_size=(3, 3), padding=1),
             nn.LeakyReLU(0.01),
-            nn.Conv2d(64, 64, stride=(1, 1), kernel_size=(3, 3), padding=1),
+            nn.Conv2d(16, 32, stride=(1, 1), kernel_size=(3, 3), padding=1),
             nn.Flatten(),
         )
 
-        self.mean = nn.Linear(200704, 1000)  # Result
-        self.var = nn.Linear(200704, 1000)
+        self.mean = nn.Linear(100352, 100)  # Result
+        self.var = nn.Linear(100352, 100)
 
         self.decoder = nn.Sequential(
-            nn.Linear(1000, 200704),
-            Reshape(-1, 64, 56, 56),
-            nn.ConvTranspose2d(64, 64, stride=(1, 1), kernel_size=(3, 3), padding=1),
+            nn.Linear(100, 100352),
+            Reshape(-1, 32, 56, 56),
+            nn.ConvTranspose2d(32, 16, stride=(1, 1), kernel_size=(3, 3), padding=1),
             nn.LeakyReLU(0.01),
-            nn.ConvTranspose2d(64, 64, stride=(2, 2), kernel_size=(3, 3), padding=1),
+            nn.ConvTranspose2d(16, 16, stride=(2, 2), kernel_size=(3, 3), padding=1),
             nn.LeakyReLU(0.01),
-            nn.ConvTranspose2d(64, 32, stride=(2, 2), kernel_size=(3, 3), padding=0),
+            nn.ConvTranspose2d(16, 8, stride=(2, 2), kernel_size=(3, 3), padding=0),
             nn.LeakyReLU(0.01),
-            nn.ConvTranspose2d(32, 3, stride=(1, 1), kernel_size=(3, 3), padding=0),
+            nn.ConvTranspose2d(8, 3, stride=(1, 1), kernel_size=(3, 3), padding=0),
             Trim(224, 224),  # 3x225x225 -> 3x224x224
             nn.Sigmoid(),
         )
@@ -68,5 +68,7 @@ class VAE(nn.Module):
 
 
 if __name__ == "__main__":
+    x = torch.randn(6, 3, 224, 224)
     model = VAE((3, 224, 224))
+    pred_img, pred_mean, pred_var = model(x)
     summary(model, (3, 224, 224))
