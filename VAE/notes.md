@@ -94,4 +94,7 @@ https://www.youtube.com/watch?v=-TPFg-RG-KY&ab_channel=StanfordOnline
 Avis : Good first introduction, not deep enough on the how it works
 
 Resume :
-The difference between the VAE and a normal AE is that we force the latent dimension distribution to be a Gaussian
+The difference between the VAE and a normal AE is that we force the latent dimension distribution to be a standard Gaussian distribution.
+To do that we want our model to learn to encode image to a latent space that we want to be standard gaussian distribution we use the KL divergence loss to ensure that our parameter mu and sigma learned by our model will be that of a standard gaussian distribution ( mean = 0 and std = 1).
+
+We then generate a sample from our gaussian distribution (using the reparametrization trick) and use this sample to try to reconstitute the original image.
