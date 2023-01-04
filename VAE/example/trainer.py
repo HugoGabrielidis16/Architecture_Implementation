@@ -1,5 +1,6 @@
 import torch
 import matplotlib.pyplot as plt
+import time
 
 
 class Trainer:
@@ -49,6 +50,8 @@ class Trainer:
             self.criterion.zero_grad()
             loss.backward()
 
+            self.criterion.step()  # Update the weights
+
             self.train_loss_dict["reconstruction_loss"].append(
                 reconstruction_loss.item()
             )
@@ -69,6 +72,7 @@ class Trainer:
                         kl_loss,
                     )
                 )
+                print("Time elapsed: %.2f min" % ((time.time() - self.start_time) / 60))
             if batch_id == len(self.train_loader) - 1:  # Generate a sample each epoch
                 random_vector = torch.randn(1, 5).to(self.device)
                 generated_image = self.model.decoder(random_vector)
@@ -109,6 +113,7 @@ class Trainer:
                     )
 
     def fit(self):
+        self.start_time = time.time()
         for epoch in range(self.total_epochs):
             print(f"Epoch : {epoch}/{self.total_epochs}")
             self.train_one_step(epoch=epoch)

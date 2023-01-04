@@ -39,8 +39,8 @@ class VAE(nn.Module):
         filter = self.encoder(torch.randn(1, *shape)).shape
         shape = int((filter[1] / 32) ** (1 / 2))
 
-        self.mean = nn.Linear(filter[1], 5)  # Result
-        self.var = nn.Linear(filter[1], 5)
+        self.mean = nn.Linear(filter[1], 5)  # latent variables
+        self.var = nn.Linear(filter[1], 5)  # latent variables
 
         self.decoder = nn.Sequential(
             nn.Linear(5, 100352),
@@ -52,7 +52,7 @@ class VAE(nn.Module):
             nn.ConvTranspose2d(16, 8, stride=(2, 2), kernel_size=(3, 3), padding=0),
             nn.LeakyReLU(0.01),
             nn.ConvTranspose2d(8, 3, stride=(1, 1), kernel_size=(3, 3), padding=0),
-            Trim(224, 224),  # 3x225x225 -> 3x224x224
+            Trim(224, 224),  # 3xWxH -> 3x2(W-1)x(H-1)
             nn.Sigmoid(),
         )
 
