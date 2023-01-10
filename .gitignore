@@ -16,3 +16,4 @@ __pycache__/
 ./AlexNet/data/cifar-10-python.tar.gz
 AlexNet/pytorch/Alexnet.pt
 AlexNet/data/
+XGBoost/
