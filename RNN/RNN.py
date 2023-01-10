@@ -20,7 +20,7 @@ class RNNcell(nn.Module):
 
     def forward(self, x, a_prev=None):
         if a_prev == None:
-            a_prev = torch.zeros(1, self.hidden_size, requires_grad=True)
+            a_prev = torch.zeros(1, self.hidden_size)
         a_next = torch.tanh(self.Wax(x) + self.Waa(a_prev))
 
         return a_next
