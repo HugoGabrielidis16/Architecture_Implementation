@@ -1,0 +1,13 @@
+### Undersanding the RNN
+
+Link : http://karpathy.github.io/2015/05/21/rnn-effectiveness/
+
+Different type of RNN : 
+    - One to One -> One input / One cell / One output
+    - One to Many -> One input / Several cell / Several output (n_cell = n_output)
+    - Many to One -> Several input / Several cell / One output (n_cell = n_input)
+    - Many to Many v1 (n_output = n_input) -> Several input / Several cell / Several output (n_cell = n_input = n_output)
+    - Many to Many v1 (n_output = n_input) -> Several input / Several cell / Several output (n_cell = n_input + n_output - 1)
+
+
+
