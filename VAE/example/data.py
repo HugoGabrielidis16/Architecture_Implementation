@@ -88,5 +88,4 @@ if __name__ == "__main__":
         x = data[0].permute((1, 2, 0)).cpu().detach().numpy()
         plt.imshow(x, cmap="turbo")
         plt.show()
-        if idx == 5:
-            break
+        break
