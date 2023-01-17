@@ -54,3 +54,6 @@ if __name__ == "__main__":
     encoder = Encoder(8, 512, 512, 2048, 100, 6)
     out = encoder(x)
     print(out.shape)
+
+
+# Notes : Add a mask for the transformer to ignore the padding tokens.
