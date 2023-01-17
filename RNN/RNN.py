@@ -22,7 +22,6 @@ class RNNcell(nn.Module):
         if a_prev == None:
             a_prev = torch.zeros(1, self.hidden_size)
         a_next = torch.tanh(self.Wax(x) + self.Waa(a_prev))
-
         return a_next
 
 

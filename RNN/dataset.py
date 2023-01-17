@@ -1,7 +1,7 @@
 import torch
 import matplotlib.pyplot as plt
 import pandas as pd
-from transformers import AutoTokenizer
+from torchtext.data import get_tokenizer
 from sklearn.model_selection import train_test_split
 
 """
@@ -15,7 +15,7 @@ def load_dataset():
     y = dataset.sentiment.map(
         {"positive": 1, "negative": 0}
     )  # map the labels to 0 and 1
-    tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")  # load the tokenizer
+    tokenizer = get_tokenizer("basic_english")
 
     X = X.map(
         lambda text: tokenizer.encode(
@@ -23,6 +23,11 @@ def load_dataset():
         )
     )
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
+        torch.Tensor(X), torch.Tensor(y), test_size=0.2, random_state=42
     )
     return X_train, X_test, y_train, y_test
+
+
+if __name__ == "__main__":
+    X_train, X_test, y_train, y_test = load_dataset()
+    print(X_train[:2])

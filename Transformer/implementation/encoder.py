@@ -1,10 +1,9 @@
 import torch
 import torch.nn as nn
 from Attention import MultiHeadAttention
-from embedding import FinalEmbedding
 
 
-class OneEncoderLayer(nn.Module):
+class EncoderLayer(nn.Module):
     def __init__(self, n_head, embedding_dim, attention_dim, hidden_dim) -> None:
         super().__init__()
 
@@ -21,7 +20,7 @@ class OneEncoderLayer(nn.Module):
         self.LayerNorm2 = nn.LayerNorm(attention_dim)
 
     def forward(self, x):
-        out = self.MultiHeadAttention(x)
+        out = self.MultiHeadAttention(query=x, key=x, value=x)
         out = out + x
         out = self.LayerNorm1(out)
         out2 = self.MLP(out)
@@ -35,10 +34,10 @@ class Encoder(nn.Module):
         self, n_head, embedding_dim, attention_dim, hidden_dim, vocab_size, n_layer
     ) -> None:
         super().__init__()
-        self.Embedding = FinalEmbedding(vocab_size, embedding_dim)
+        self.Embedding = nn.Embedding(vocab_size, embedding_dim)
         self.Encoder = nn.ModuleList(
             [
-                OneEncoderLayer(n_head, embedding_dim, attention_dim, hidden_dim)
+                EncoderLayer(n_head, embedding_dim, attention_dim, hidden_dim)
                 for _ in range(n_layer)
             ]
         )
@@ -51,17 +50,7 @@ class Encoder(nn.Module):
 
 
 if __name__ == "__main__":
-    x = torch.randint(0, 100, (32, 100))
-    encoder = Encoder(
-        n_head=8,
-        embedding_dim=512,
-        attention_dim=512,
-        hidden_dim=1024,
-        vocab_size=100,
-        n_layer=6,
-    )
-    y = encoder(x)
-    print(y.shape)
-""" class Decoder(nn.Module):
-    def __init__(self, n_head, embedding_dim, attention_dim, hidden_dim, vocab_size) -> None:
- """
+    x = torch.randint(0, 100, (5, 100))
+    encoder = Encoder(8, 512, 512, 2048, 100, 6)
+    out = encoder(x)
+    print(out.shape)

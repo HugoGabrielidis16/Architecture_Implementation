@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from Transformer import TransformerBlock
+from implementation.Transformer import TransformerBlock
 import torchmetrics
 import sys
 from torch.optim import Adam

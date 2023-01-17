@@ -7,17 +7,16 @@ class Attention(nn.Module):
     Decided to create a SingleAttentionHead class that implement the scaled dot product operation
     """
 
-    def __init__(self, masked=False):
+    def __init__(self):
         super().__init__()
-        self.masked = masked
         self.softmax = nn.Softmax(dim=-1)
 
-    def forward(self, q, k, v):
+    def forward(self, q, k, v, mask=False):
         attention_dim = k.shape[-1]
         attention = (
             torch.matmul(q, k.transpose(-1, -2)) / attention_dim**0.5
         )  # Scaled dot product
-        if self.masked:
+        if mask:
             filter = torch.tril(attention, diagonal=0)
             attention = attention.masked_fill(
                 filter == 0, float("-inf")
@@ -28,7 +27,7 @@ class Attention(nn.Module):
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, num_heads, embedding_dim, attention_dim, masked=False):
+    def __init__(self, num_heads, embedding_dim, attention_dim, mask=False):
         super().__init__()
 
         self.embedding_dim = embedding_dim
@@ -39,16 +38,18 @@ class MultiHeadAttention(nn.Module):
         self.Wk = nn.Linear(embedding_dim, attention_dim)
         self.Wv = nn.Linear(embedding_dim, attention_dim)
 
-        self.attention = Attention(masked=masked)
+        self.attention = Attention()
         self.Linear = nn.Linear(attention_dim, attention_dim)
 
-    def forward(self, x):
-        batch_size, sequence_length, _ = x.shape
+        self.mask = mask
+
+    def forward(self, query, key, value):
+        batch_size, sequence_length, _ = query.shape
         length = self.attention_dim // self.num_heads
 
-        q = self.Wq(x)  # Create a query matrix
-        k = self.Wk(x)  # Create a key matrix
-        v = self.Wv(x)  # Create a value matrix
+        q = self.Wq(query)  # Create a query matrix
+        k = self.Wk(key)  # Create a key matrix
+        v = self.Wv(value)  # Create a value matrix
 
         #
         q = q.view(batch_size, sequence_length, self.num_heads, length).permute(
@@ -62,17 +63,17 @@ class MultiHeadAttention(nn.Module):
             0, 2, 1, 3
         )
 
-        attention = self.attention(q, k, v)
-        atention = (
+        attention = self.attention(q, k, v, mask=self.mask)
+        attention = (
             attention.permute(0, 2, 1, 3)
             .contiguous()
             .view(batch_size, sequence_length, self.attention_dim)
         )
-        out = self.Linear(atention)
+        out = self.Linear(attention)
         return out
 
 
 if __name__ == "__main__":
     x = torch.randn(32, 10, 512)
     MultiHeadAttention = MultiHeadAttention(8, 512, 64)
-    print(MultiHeadAttention(x).shape)
+    print(MultiHeadAttention(x, x, x).shape)
