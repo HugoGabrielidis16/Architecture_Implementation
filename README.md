@@ -21,8 +21,9 @@ My Learning process to understand a new model is :</br>
 :white_check_mark: VAE </br>
 :white_check_mark: RNN </br>
 :white_check_mark: Transformer </br>
+:white_check_mark: Res-UNet-a </br>
 
-# To DO
+# To implement  
 
 :memo: LSTM </br>
 :memo: EfficientNet </br>
@@ -30,6 +31,13 @@ My Learning process to understand a new model is :</br>
 :memo: Diffusion model</br>
 :memo: BERT</br>
 
-# Other
+# Comments 
 
-This project is only done in order to progress coding 
+This repository was only done in order for me to understand the various deep learning architecture. It may contains mistakes and in this case do not hesitate to contact me as I would be happy to correct them and further my understanding.
+
+# To do 
+
+Adapt each folder to format : 
+    - implementation
+    - examples
+    README.md
