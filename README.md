@@ -19,15 +19,13 @@ My Learning process to understand a new model is :</br>
 :white_check_mark: ResNet </br>
 :white_check_mark: UNET </br>
 :white_check_mark: VAE </br>
-
-
+:white_check_mark: RNN </br>
+:white_check_mark: Transformer </br>
 
 # To DO
 
-:memo: RNN </br>
 :memo: LSTM </br>
 :memo: EfficientNet </br>
-:memo: Transformer </br>
 :memo: VIT</br>
 :memo: Diffusion model</br>
 :memo: BERT</br>

@@ -9,6 +9,12 @@ class LSTMcell(nn.Module):
         self.Wx = nn.Linear(input_size,hidden_size)
         self.Wh = nn.Linear(hidden_size, hidden_size)
         self.Wc = 
+    
     def forward(self,x,h,c):
+        x = self.Wx(x)
+        h = self.Wh(h)
+        c = self.Wc(c)
+
+
 
 
